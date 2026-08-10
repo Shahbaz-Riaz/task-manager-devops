@@ -1,0 +1,40 @@
+name: CI/CD PIPELINE FOR DEVOPS
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu:latest
+    steps:
+      - name: Checkout code 
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: test build image
+        run: docker compose build
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu:latest
+    steps:
+      - name: SSH and Deploy to AWS EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/
+            docker pull shahbazriaz/frontendimg:latest
+            docker pull shahbazriaz/backendimg:latest
+            docker pull mongo:latest
+            docker pull nginx:latest    
+            docker-compose up -d
+            docker image prune -f
+

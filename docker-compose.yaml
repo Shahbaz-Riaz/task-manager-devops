@@ -3,10 +3,7 @@ services:
   #-----------------Backend Service-----------------------
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: backend:1.0
+    image: shahbazriaz/backendimg:latest
     container_name: backend
     ports:
       - 8080:8080
@@ -18,10 +15,7 @@ services:
   #--------------Frontend Service-------------
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: frontend:1.0
+    image: shahbazriaz/frontendimg:latest
     container_name: frontend
     ports:
       - 3000:4173
